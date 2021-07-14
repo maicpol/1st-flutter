@@ -25,10 +25,9 @@ class MyHomePage extends StatefulWidget {
 
 class SongDetail {
   String strTitle;
-  var songNum;
   var isFavorite = false;
 
-  SongDetail(this.strTitle, this.songNum, this.isFavorite);
+  SongDetail(this.strTitle, this.isFavorite);
 }
 
 class Search extends SearchDelegate {
@@ -95,10 +94,10 @@ class Search extends SearchDelegate {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<SongDetail> arrSongList = [
-    new SongDetail("strTitle1", "1", true),
-    new SongDetail("strTitle2", "2", false),
-    new SongDetail("strTitle3", "3", true),
-    new SongDetail("strTitle3", "3", true),
+    new SongDetail("O Worship the Lord", false),
+    new SongDetail("Simbahon naton si Ginoong Jesu-Cristo", false),
+    new SongDetail("strTitle3", true),
+    new SongDetail("strTitle3", true),
   ];
   @override
   Widget build(BuildContext context) {
@@ -142,8 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: <Widget>[
                           new Container(
                             child: Text(
-                              arrSongList[index].songNum +
-                                  "\t" +
+                              (index + 1).toString().padLeft(3, '0') +
+                                  "       " +
                                   arrSongList[index].strTitle,
                               textAlign: TextAlign.left,
                               style: TextStyle(fontSize: 16),
@@ -195,7 +194,16 @@ class LyricPage extends StatefulWidget {
 }
 
 class LyricPageState extends State<LyricPage> {
-  String songLyrics = '';
+  lyricsOfSong(int num) {
+    switch (num) {
+      case 1:
+        return "dasd";
+      case 2:
+        return "";
+      default:
+        return "dasfagsdgaa";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -204,12 +212,13 @@ class LyricPageState extends State<LyricPage> {
           title: Text(widget.songTitle),
         ),
         body: Center(
-          child: TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('back'),
-          ),
+          child: Text(lyricsOfSong(widget.songNumber + 1)),
+          // child: TextButton(
+          //   onPressed: () {
+          //     Navigator.pop(context);
+          //   },
+          //   child: Text('back'),
+          // ),
         ));
   }
 }
