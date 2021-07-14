@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 void main() => runApp(MyApp());
 
@@ -18,9 +19,21 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-  final List<String> list = List.generate(10, (index) => 'Text $index');
+  final List<String> list = List.generate(
+      10,
+      (index) =>
+          '${(index + 1).toString().padLeft(3, '0')}          ${songTitle(index + 1)}');
   @override
   _MyHomePageState createState() => _MyHomePageState();
+}
+
+songTitle(int num) {
+  switch (num) {
+    case 1:
+      return "okoasjfo";
+    default:
+      return "Assign title to this Number";
+  }
 }
 
 class SongDetail {
@@ -92,15 +105,37 @@ class Search extends SearchDelegate {
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  List<SongDetail> arrSongList = [
-    new SongDetail("O Worship the Lord", false),
-    new SongDetail("Simbahon naton si Ginoong Jesu-Cristo", false),
-    new SongDetail("strTitle3", true),
-    new SongDetail("strTitle3", true),
-  ];
+class FotterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: ElevatedButton(
+        onPressed: () {},
+        child: const Text('Bottom Button!', style: TextStyle(fontSize: 20)),
+        // color: Colors.blue,
+        // textColor: Colors.white,
+        // elevation: 5,
+      ),
+    );
+  }
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<SongDetail> arrSongList = List.generate(
+      600, (index) => new SongDetail(songTitle(index + 1), false));
+  //List<String> arrSongList = List.generate(600,(index) => '${(index + 1).toString().padLeft(3, '0')}     ${songTitle(index+1)}'); //[
+  //   new SongDetail("O Worship the Lord", false),
+  //   new SongDetail("Simbahon naton si Ginoong Jesu-Cristo", false),
+  //   new SongDetail("strTitle3", true),
+  //   new SongDetail("strTitle3", true),
+  // ];
+
+  @override
+  Widget build(BuildContext context) {
+    PersistentTabController _controller;
+
+    _controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -126,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(
                       builder: (context) => LyricPage(
                             songNumber: n,
-                            songTitle: t,
+                            songTitle: songTitle(n),
                           )));
             },
             child: Container(
@@ -142,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           new Container(
                             child: Text(
                               (index + 1).toString().padLeft(3, '0') +
-                                  "       " +
+                                  "         " +
                                   arrSongList[index].strTitle,
                               textAlign: TextAlign.left,
                               style: TextStyle(fontSize: 16),
@@ -180,6 +215,11 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
+      // bottomNavigationBar: BottomNavigationBar(items: [],);
+      // child: ElevatedButton(
+      //   onPressed: () {},
+      //   child: const Text('Bottom Button!', style: TextStyle(fontSize: 20)),
+      // ),
     );
   }
 }
