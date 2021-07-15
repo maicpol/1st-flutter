@@ -11,12 +11,24 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
         ),
-        home: MyHomePage(title: 'Flutter Demo ListView with Button'));
+        home:
+            FotterButton()); //HiligaynonPage(title: 'Flutter Demo ListView with Button'));
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class HiligaynonPage extends StatefulWidget {
+  HiligaynonPage({Key? key, required this.title}) : super(key: key);
+  final String title;
+  final List<String> list = List.generate(
+      10,
+      (index) =>
+          '${(index + 1).toString().padLeft(3, '0')}          ${songTitle(index + 1)}');
+  @override
+  HiligaynonTblOfContents createState() => HiligaynonTblOfContents();
+}
+
+class EnglishPage extends StatefulWidget {
+  EnglishPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
   final List<String> list = List.generate(
@@ -24,13 +36,15 @@ class MyHomePage extends StatefulWidget {
       (index) =>
           '${(index + 1).toString().padLeft(3, '0')}          ${songTitle(index + 1)}');
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  EnglishTblOfContents createState() => EnglishTblOfContents();
 }
 
 songTitle(int num) {
   switch (num) {
     case 1:
-      return "okoasjfo";
+      return "Euno";
+    case 2:
+      return "Hdos";
     default:
       return "Assign title to this Number";
   }
@@ -41,6 +55,10 @@ class SongDetail {
   var isFavorite = false;
 
   SongDetail(this.strTitle, this.isFavorite);
+}
+
+class Empty {
+  Empty();
 }
 
 class Search extends SearchDelegate {
@@ -105,37 +123,16 @@ class Search extends SearchDelegate {
   }
 }
 
-class FotterButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: ElevatedButton(
-        onPressed: () {},
-        child: const Text('Bottom Button!', style: TextStyle(fontSize: 20)),
-        // color: Colors.blue,
-        // textColor: Colors.white,
-        // elevation: 5,
-      ),
-    );
-  }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<SongDetail> arrSongList = List.generate(
-      600, (index) => new SongDetail(songTitle(index + 1), false));
-  //List<String> arrSongList = List.generate(600,(index) => '${(index + 1).toString().padLeft(3, '0')}     ${songTitle(index+1)}'); //[
-  //   new SongDetail("O Worship the Lord", false),
-  //   new SongDetail("Simbahon naton si Ginoong Jesu-Cristo", false),
-  //   new SongDetail("strTitle3", true),
-  //   new SongDetail("strTitle3", true),
-  // ];
+class EnglishTblOfContents extends State<EnglishPage> {
+  List<dynamic> arrSongList = List.generate(600, (index) {
+    if (index % 2 != 0) {
+      return new SongDetail(songTitle(index), false);
+    } else
+      return new Empty();
+  });
 
   @override
   Widget build(BuildContext context) {
-    PersistentTabController _controller;
-
-    _controller = PersistentTabController(initialIndex: 0);
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -164,54 +161,235 @@ class _MyHomePageState extends State<MyHomePage> {
                             songTitle: songTitle(n),
                           )));
             },
-            child: Container(
-                height: 45.0,
-                decoration: BoxDecoration(),
-                child: new Column(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(left: 15.0, right: 15.0),
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          new Container(
-                            child: Text(
-                              (index + 1).toString().padLeft(3, '0') +
-                                  "         " +
-                                  arrSongList[index].strTitle,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(fontSize: 16),
-                              maxLines: 1,
-                            ),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10.0),
-                                    topRight: Radius.circular(10.0))),
+            child: (index % 2 != 0)
+                ? Container(
+                    height: 45.0,
+                    decoration: BoxDecoration(),
+                    child: new Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new Container(
+                                child: Text(
+                                  (index).toString().padLeft(3, '0') +
+                                      "         " +
+                                      arrSongList[index].strTitle,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 16),
+                                  maxLines: 1,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0))),
+                              ),
+                              new GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    arrSongList[index].isFavorite =
+                                        !arrSongList[index].isFavorite;
+                                  });
+                                  print('clicked on heart ' +
+                                      arrSongList[index].strTitle);
+                                },
+                                child: new Container(
+                                    margin: const EdgeInsets.all(0.0),
+                                    child: new Icon(
+                                      arrSongList[index].isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.red,
+                                      size: 30.0,
+                                    )),
+                              ),
+                            ],
                           ),
-                          new GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                arrSongList[index].isFavorite =
-                                    !arrSongList[index].isFavorite;
-                              });
-                              print('clicked on heart ' +
-                                  arrSongList[index].strTitle);
-                            },
-                            child: new Container(
-                                margin: const EdgeInsets.all(0.0),
-                                child: new Icon(
-                                  arrSongList[index].isFavorite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: Colors.red,
-                                  size: 30.0,
-                                )),
+                        ),
+                      ],
+                    ))
+                : Container(
+                    child: null,
+                  ),
+          );
+        },
+      ),
+      // bottomNavigationBar: BottomNavigationBar(items: [],);
+      // child: ElevatedButton(
+      //   onPressed: () {},
+      //   child: const Text('Bottom Button!', style: TextStyle(fontSize: 20)),
+      // ),
+    );
+  }
+}
+
+class FotterButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    PersistentTabController _controller;
+    _controller = PersistentTabController(initialIndex: 0);
+
+    List<PersistentBottomNavBarItem> _navBarsItems() {
+      return [
+        PersistentBottomNavBarItem(
+          icon: Text(
+            "Hil",
+            style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: Colors.blue.shade900,
+                fontSize: 18,
+                fontStyle: FontStyle.italic),
+          ),
+          title: ("Hiligaynon"),
+        ),
+        PersistentBottomNavBarItem(
+          icon: Text(
+            "En",
+            style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: Colors.blue.shade900,
+                fontSize: 18,
+                fontStyle: FontStyle.italic),
+          ),
+          title: ("English"),
+        ),
+      ];
+    }
+
+    return Scaffold(
+        body: PersistentTabView(
+      context,
+      controller: _controller,
+      screens: [
+        HiligaynonPage(title: 'SDA Hymnal (Hiligaynon)'),
+        EnglishPage(
+          title: 'SDA Hymnal',
+        )
+      ],
+      items: _navBarsItems(),
+      confineInSafeArea: true,
+      backgroundColor: Colors.white, // Default is Colors.white.
+      handleAndroidBackButtonPress: true, // Default is true.
+      resizeToAvoidBottomInset:
+          true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+      stateManagement: true, // Default is true.
+      hideNavigationBarWhenKeyboardShows:
+          true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar: Colors.white,
+      ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: ItemAnimationProperties(
+        // Navigation Bar's items animation properties.
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: ScreenTransitionAnimation(
+        // Screen transition animation on change of selected tab.
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle:
+          NavBarStyle.style1, // Choose the nav bar style with this property.
+    ));
+  }
+}
+
+class HiligaynonTblOfContents extends State<HiligaynonPage> {
+  List<dynamic> arrSongList = List.generate(600, (index) {
+    if (index % 2 == 0) {
+      return new SongDetail(songTitle(index), false);
+    } else
+      return new Empty();
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              showSearch(context: context, delegate: Search(widget.list));
+            },
+            icon: Icon(Icons.search),
+          )
+        ],
+        centerTitle: true,
+        title: Text(widget.title),
+      ),
+      body: ListView.builder(
+        itemCount: arrSongList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return new GestureDetector(
+            onTap: () {
+              int n = index;
+              String t = arrSongList[index].strTitle;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LyricPage(
+                            songNumber: n,
+                            songTitle: songTitle(n),
+                          )));
+            },
+            child: ((index % 2 == 0) && (index != 0))
+                ? Container(
+                    height: 45.0,
+                    decoration: BoxDecoration(),
+                    child: new Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(left: 15.0, right: 15.0),
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new Container(
+                                child: Text(
+                                  (index).toString().padLeft(3, '0') +
+                                      "         " +
+                                      arrSongList[index].strTitle,
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(fontSize: 16),
+                                  maxLines: 1,
+                                ),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10.0),
+                                        topRight: Radius.circular(10.0))),
+                              ),
+                              new GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    arrSongList[index].isFavorite =
+                                        !arrSongList[index].isFavorite;
+                                  });
+                                  print('clicked on heart ' +
+                                      arrSongList[index].strTitle);
+                                },
+                                child: new Container(
+                                    margin: const EdgeInsets.all(0.0),
+                                    child: new Icon(
+                                      arrSongList[index].isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: Colors.red,
+                                      size: 30.0,
+                                    )),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )),
+                        ),
+                      ],
+                    ))
+                : Container(
+                    child: null,
+                  ),
           );
         },
       ),
@@ -237,11 +415,11 @@ class LyricPageState extends State<LyricPage> {
   lyricsOfSong(int num) {
     switch (num) {
       case 1:
-        return "dasd";
+        return "EOne";
       case 2:
-        return "";
+        return "HTwo";
       default:
-        return "dasfagsdgaa";
+        return "zero";
     }
   }
 
@@ -252,7 +430,7 @@ class LyricPageState extends State<LyricPage> {
           title: Text(widget.songTitle),
         ),
         body: Center(
-          child: Text(lyricsOfSong(widget.songNumber + 1)),
+          child: Text(lyricsOfSong(widget.songNumber)),
           // child: TextButton(
           //   onPressed: () {
           //     Navigator.pop(context);
